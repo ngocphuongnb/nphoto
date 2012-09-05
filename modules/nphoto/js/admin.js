@@ -25,44 +25,10 @@ function np_delete( type, by, value, get_from )
 	{
 		if( confirm('Bạn có chắc chắn xóa ' + type + ' này?' ) )
 		{
+			$('#middle_column_r').before('<div id="msgcontainer"><div class="loading"></div></div>');
 			if( get_from == '' ) get_from = 'photos';
 			nv_ajax('post', script_name, nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=delete&type=' +type+'&by='+by+'&get_from=' + get_from + '&value='+value, '', 'np_delete_rs');
 		}
-	}
-}
-
-function np_delete_rs(res)
-{
-	rs = res.split('*');
-	var war = rs[0].split('#');
-	var ok = rs[1].split('#');
-	var err = rs[2].split('#');
-	
-	if( err[1] != '' )
-	{
-		$('#middle_column_r').before('<div class="nperror"><div class="msgcontent"><span class="title">Error!</span><br /><p>' + err[1] + '</p></div></div>');
-		
-	    $(".nperror").animate({
-		  width: "400px",
-	    }, 500 );
-	}
-	if( ok[1] != '' )
-	{
-		$('#middle_column_r').before('<div class="success"><div class="msgcontent"><span class="title">Success!</span><br /><p>' + ok[1] + '</p></div></div>');
-		
-	    $(".success").animate({
-		  width: "400px",
-	    }, 500 );
-		setTimeout(function() {window.location.reload();},3000);
-	}
-	if( war[1] != '' )
-	{
-		$('#middle_column_r').before('<div class="warning"><div class="msgcontent"><span class="title">Warning!</span><br /><p>' + war[1] + '</p></div></div>');
-		
-	    $(".warning").animate({
-		  width: "400px",
-	    }, 500 );
-		//setTimeout(function() {window.location.reload();},3000);
 	}
 }
 
@@ -334,12 +300,15 @@ function movecatdata( current_catid, new_catid )
 		var e = document.getElementById("new_cat");
 		new_catid = e.options[e.selectedIndex].value;
 	}
+	$('#msgcontainer').remove();
+	$('#middle_column_r').before('<div id="msgcontainer"><div class="loading"></div></div>');
 	nv_ajax('post', script_name, nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=delete&cat_edit=1&action=movecatdata&current_catid=' + current_catid + '&new_catid=' + new_catid, '', 'np_delete_rs');
 }
 
 function np_movephoto( new_catid, value, get_from )
 {
 	if( get_from == '' ) get_from = 'photos';
+	$('#middle_column_r').before('<div id="msgcontainer"><div class="loading"></div></div>');
 	nv_ajax('post', script_name, nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=delete&cat_edit=1&action=movephoto&new_catid=' + new_catid + '&get_from=' + get_from + '&value=' + value, '', 'np_delete_rs');
 }
 
@@ -347,6 +316,42 @@ function np_addToAlbum( albumid, listphoto )
 {
 	if( confirm('Bạn có chắc chắn thêm vào album này?' ) )
 	{
+		$('#middle_column_r').before('<div id="msgcontainer"><div class="loading"></div></div>');
 		nv_ajax('post', script_name, nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=delete&type=addtoalbum&albumid=' + albumid + '&value=' + listphoto, '', 'np_delete_rs');
+	}
+}
+
+function np_delete_rs(res)
+{
+	rs = res.split('*');
+	var war = rs[0].split('#');
+	var ok = rs[1].split('#');
+	var err = rs[2].split('#');
+	
+	if( err[1] != '' )
+	{
+		$('#msgcontainer').html('<div class="nperror"><div class="msgcontent"><span class="title">Error!</span><br /><p>' + err[1] + '</p></div></div>');
+		
+	    $(".nperror").animate({
+		  width: "400px",
+	    }, 500 );
+	}
+	if( ok[1] != '' )
+	{
+		$('#msgcontainer').html('<div class="success"><div class="msgcontent"><span class="title">Success!</span><br /><p>' + ok[1] + '</p></div></div>');
+		
+	    $(".success").animate({
+		  width: "400px",
+	    }, 500 );
+		setTimeout(function() {window.location.reload();},3000);
+	}
+	if( war[1] != '' )
+	{
+		$('#msgcontainer').html('<div class="warning"><div class="msgcontent"><span class="title">Warning!</span><br /><p>' + war[1] + '</p></div></div>');
+		
+	    $(".warning").animate({
+		  width: "400px",
+	    }, 500 );
+		//setTimeout(function() {window.location.reload();},3000);
 	}
 }
